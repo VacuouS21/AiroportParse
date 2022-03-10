@@ -4,15 +4,13 @@ import utils.Utils;
 import utils.ymlFile;
 
 import java.io.FileNotFoundException;
-import java.nio.charset.Charset;
-import java.nio.charset.CharsetDecoder;
-import java.sql.Array;
-import java.util.*;
-import java.util.regex.Pattern;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Scanner;
 
 public class MainMethod {
 
-    private static String inputString;
+
     public static ymlFile myFile;
     private static ArrayList<String> myData;
 /**
@@ -25,37 +23,55 @@ public class MainMethod {
 
         //Ввод
         System.out.println("Введите строку");
-
         Scanner in=new Scanner(System.in);
-        inputString=in.nextLine();
-
+        String inputString=in.nextLine();
+        //проверка на пустую строку.
+        while (inputString.isEmpty()){
+            System.out.println("Вы ввели пустую строку, введите заново");
+            inputString=in.nextLine();
+        }
         //Считываем свойства из application.yml
         myFile=Utils.createYml();
 
-        //Запись в масив всех значений заданоой в yml колонки
+        //ввод колонки
+        int columns;
+        if(args.length==1){
+            columns=Integer.parseInt(args[0]);
+        }
+        else columns=myFile.getColumn();
+
+        //Запись в масив всех значений заданоой колонки
         try {
-            myData=CSVDock.parseCsv(myFile.getPath(), myFile.getColumn());
+            myData=CSVDock.parseCsv(myFile.getPath(), columns);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
 
         //Сортировка, для дальнейшего поиска
         Collections.sort(myData);
-        System.out.println(myData.get(0));
+
 
         //Поиск индексов строки, которые соответсвуют введённой строке
-        ArrayList<Integer> result= Search.BinarySearch(myData,inputString);
 
+        ArrayList<Integer> result= Search.BinarySearch(myData,inputString.toLowerCase());
+
+
+        int time=result.get(0);
+        result.remove(0);
 
         //Вывод результата.
         System.out.println("Результат поиска:");
 
-        for(int i=0;i<result.size();i++){
-            System.out.println(result.get(i));
+
+        try {
+            CSVDock.parseCsvForFindLine(myFile.getPath(),myFile.getColumn(),result);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
         }
 
-        System.out.println("Кол-во найденных строк: "+(result.size()-1));
-        System.out.println("Время,затраченное на поиск: "+result.get(0)+" ms");
+
+        System.out.println("Кол-во найденных строк: "+(result.size()));
+        System.out.println("Время,затраченное на поиск: "+time+" ms");
 
     }
 }

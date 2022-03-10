@@ -8,12 +8,15 @@
     <artifactId>AiroportParse</artifactId>
     <version>1.0-SNAPSHOT</version>
 
+
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
     </properties>
 
+
 <dependencies>
+
     <dependency>
         <groupId>com.opencsv</groupId>
         <artifactId>opencsv</artifactId>
@@ -31,4 +34,5 @@
         <scope>compile</scope>
     </dependency>
 </dependencies>
+
 </project>
