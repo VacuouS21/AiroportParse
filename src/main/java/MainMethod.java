@@ -40,6 +40,10 @@ public class MainMethod {
         }
         else columns=myFile.getColumn();
 
+        if(columns>13){
+            System.err.println("Такого поля нет, взято последнее поле");
+            columns=13;
+        }
         //Запись в масив всех значений заданоой колонки
         try {
             myData=CSVDock.parseCsv(myFile.getPath(), columns);
